@@ -24,7 +24,8 @@ function PostCreateForm() {
     title: "",
     content: "",
     image: "",
-  })
+  });
+  
   const {title,content, image} = postData
 
   const imageInput = useRef(null)
