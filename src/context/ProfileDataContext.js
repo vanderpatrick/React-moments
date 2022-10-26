@@ -1,20 +1,47 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { axiosReq } from "../api/axiosDefaults";
-import { useCurrentUser } from "./CurrentUserContext";
-export const ProfileDataContext = createContext();
-export const SetProfileDataContext = createContext();
+import { axiosReq, axiosRes } from "../api/axiosDefaults";
+import { useCurrentUser } from "../context/CurrentUserContext";
+import { followHelper } from "../utils/utils";
+
+const ProfileDataContext = createContext();
+const SetProfileDataContext = createContext();
 
 export const useProfileData = () => useContext(ProfileDataContext);
 export const useSetProfileData = () => useContext(SetProfileDataContext);
 
-const ProfileDataProvider = ({ children }) => {
+export const ProfileDataProvider = ({ children }) => {
   const [profileData, setProfileData] = useState({
-    // we will use the pageProfile later
+    // we will use the pageProfile later!
     pageProfile: { results: [] },
     popularProfiles: { results: [] },
   });
 
   const currentUser = useCurrentUser();
+
+  const handleFollow = async (clickedProfile) => {
+    try {
+      const { data } = await axiosRes.post("/follows/", {
+        followed: clickedProfile.id,
+      });
+
+      setProfileData((prevState) => ({
+        ...prevState,
+        pageProfile: {
+          results: prevState.pageProfile.results.map((profile) =>
+            followHelper(profile, clickedProfile, data.id)
+          ),
+        },
+        popularProfiles: {
+          ...prevState.popularProfiles,
+          results: prevState.popularProfiles.results.map((profile) =>
+            followHelper(profile, clickedProfile, data.id)
+          ),
+        },
+      }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     const handleMount = async () => {
@@ -30,15 +57,16 @@ const ProfileDataProvider = ({ children }) => {
         console.log(err);
       }
     };
+
     handleMount();
   }, [currentUser]);
+
   return (
     <ProfileDataContext.Provider value={profileData}>
-        <SetProfileDataContext.Provider value={setProfileData}>
-            {children}
-        </SetProfileDataContext.Provider>
+      <SetProfileDataContext.Provider value={{ setProfileData, handleFollow }}>
+        {children}
+      </SetProfileDataContext.Provider>
     </ProfileDataContext.Provider>
-    )
+  );
 };
-
 export default ProfileDataProvider;
