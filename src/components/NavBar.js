@@ -1,28 +1,33 @@
 import React from "react";
-import { Navbar, Container, Nav } from "react-bootstrap";
+import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
 import logo from "../assets/logo.png";
 import styles from "../styles/NavBar.module.css";
 import { NavLink } from "react-router-dom";
-import { useCurrentUser, useSetCurrentUser } from "../context/CurrentUserContext";
+import {
+  useCurrentUser,
+  useSetCurrentUser,
+} from "../context/CurrentUserContext";
 import Avatar from "./Avatar";
 import axios from "axios";
 import useClickOutSideToggle from "../hooks/useClickOutSideToggle";
 import { removeTokenTimestamp } from "../utils/utils";
 
 const NavBar = () => {
-  const setCurrentuser = useSetCurrentUser()
-  const currentUser = useCurrentUser()
-  const {expanded, setExpanded, ref} = useClickOutSideToggle()
+  const setCurrentuser = useSetCurrentUser();
+  const currentUser = useCurrentUser();
+  const { expanded, setExpanded, ref } = useClickOutSideToggle();
 
   const handleLogOut = async () => {
     try {
       await axios.post("dj-rest-auth/logout/");
-      setCurrentuser(null)
+      setCurrentuser(null);
       removeTokenTimestamp();
-    }catch(err){
-      console.log(err)
+    } catch (err) {
+      // console.log(err);
     }
-  }
+  };
 
   const addPostIcon = (
     <NavLink
@@ -34,33 +39,34 @@ const NavBar = () => {
     </NavLink>
   );
 
-  const loggedInIcons =   <>
-  <NavLink
-    className={styles.NavLink}
-    activeClassName={styles.Active}
-    to="/feed"
-  >
-    <i className="fas fa-stream"></i>Feed
-  </NavLink>
-  <NavLink
-    className={styles.NavLink}
-    activeClassName={styles.Active}
-    to="/liked"
-  >
-    <i className="fas fa-heart"></i>Liked
-  </NavLink>
-  <NavLink className={styles.NavLink} onClick={handleLogOut} to="/" >
-    <i className="fas fa-sign-out-alt"></i>Sign out
-  </NavLink>
-        <NavLink
+  const loggedInIcons = (
+    <>
+      <NavLink
+        className={styles.NavLink}
+        activeClassName={styles.Active}
+        to="/feed"
+      >
+        <i className="fas fa-stream"></i>Feed
+      </NavLink>
+      <NavLink
+        className={styles.NavLink}
+        activeClassName={styles.Active}
+        to="/liked"
+      >
+        <i className="fas fa-heart"></i>Liked
+      </NavLink>
+      <NavLink className={styles.NavLink} onClick={handleLogOut} to="/">
+        <i className="fas fa-sign-out-alt"></i>Sign out
+      </NavLink>
+      <NavLink
         className={styles.NavLink}
         to={`/profiles/${currentUser?.profile_id}`}
       >
         <Avatar src={currentUser?.profile_image} text="Profile" height={40} />
       </NavLink>
-  </>;
-  
-  
+    </>
+  );
+
   const loggedOutIcons = (
     <>
       <NavLink
@@ -81,7 +87,12 @@ const NavBar = () => {
   );
 
   return (
-    <Navbar expanded={expanded} className={styles.NavBar} expand="md" fixed="top">
+    <Navbar
+      expanded={expanded}
+      className={styles.NavBar}
+      expand="md"
+      fixed="top"
+    >
       <Container>
         <NavLink to="/">
           <Navbar.Brand>
@@ -89,10 +100,10 @@ const NavBar = () => {
           </Navbar.Brand>
         </NavLink>
         {currentUser && addPostIcon}
-        <Navbar.Toggle 
-        ref={ref}
-        onClick={() => setExpanded(!expanded)} 
-        aria-controls="basic-navbar-nav" 
+        <Navbar.Toggle
+          ref={ref}
+          onClick={() => setExpanded(!expanded)}
+          aria-controls="basic-navbar-nav"
         />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto text-left">
