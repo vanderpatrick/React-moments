@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 
 import Asset from "../../components/Asset";
-
+import { ProfileEditDropdown } from "../../components/MoreDropDown";
 import styles from "../../styles/ProfilePage.module.css";
 import appStyles from "../../app.module.css";
 import btnStyles from "../../styles/Button.module.css";
@@ -31,7 +31,7 @@ function ProfilePage() {
   const currentUser = useCurrentUser();
   const { id } = useParams();
 
-  const { setProfileData, handleFollow } = useSetProfileData();
+  const { setProfileData, handleFollow, handleUnFollow } = useSetProfileData();
   const { pageProfile } = useProfileData();
 
   const [profile] = pageProfile.results;
@@ -60,6 +60,7 @@ function ProfilePage() {
 
   const mainProfile = (
     <>
+    {profile?.is_owner && <ProfileEditDropdown id={profile?.id} />}
       <Row noGutters className="px-3 text-center">
         <Col lg={3} className="text-lg-left">
           <Image
@@ -91,7 +92,7 @@ function ProfilePage() {
             (profile?.following_id ? (
               <Button
                 className={`${btnStyles.Button} ${btnStyles.BlackOutline}`}
-                onClick={() => {}}
+                onClick={() => handleUnFollow(profile)}
               >
                 unfollow
               </Button>

@@ -5,31 +5,34 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import { Image } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
+import Image from "react-bootstrap/Image";
+
+import Asset from "../../components/Asset";
+
 import Upload from "../../assets/upload.png";
 
 import styles from "../../styles/PostCreateEditForm.module.css";
 import appStyles from "../../app.module.css";
 import btnStyles from "../../styles/Button.module.css";
-import Asset from "../../components/Asset";
-import { useHistory } from "react-router-dom";
-import { axiosReq } from "../../api/axiosDefaults";
 
+import { useHistory } from "react-router";
+import { axiosReq } from "../../api/axiosDefaults";
+import { useRedirect } from "../../hooks/useRedirect";
 
 function PostCreateForm() {
-
+  useRedirect("loggedOut");
   const [errors, setErrors] = useState({});
+
   const [postData, setPostData] = useState({
     title: "",
     content: "",
     image: "",
   });
-  
-  const {title,content, image} = postData
+  const { title, content, image } = postData;
 
-  const imageInput = useRef(null)
-  const history = useHistory()
+  const imageInput = useRef(null);
+  const history = useHistory();
 
   const handleChange = (event) => {
     setPostData({
@@ -37,7 +40,6 @@ function PostCreateForm() {
       [event.target.name]: event.target.value,
     });
   };
-
 
   const handleChangeImage = (event) => {
     if (event.target.files.length) {
