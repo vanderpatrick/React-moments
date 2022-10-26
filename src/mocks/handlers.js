@@ -1,3 +1,5 @@
+import { rest } from "msw";
+
 const baseURL = "https://moments-drf-patrick.herokuapp.com/";
 
 export const handlers = [
@@ -16,6 +18,6 @@ export const handlers = [
     );
   }),
   rest.post(`${baseURL}dj-rest-auth/logout/`, (req,rex,ctz) => {
-    return res(ctx.status(200))
+    return rest(ctx.status(200))
   })
 ];

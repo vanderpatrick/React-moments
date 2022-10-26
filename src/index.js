@@ -7,15 +7,13 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { CurrentUserProvider } from "./context/CurrentUserContext";
 import ProfileDataProvider from "./context/ProfileDataContext";
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <CurrentUserProvider>
-        <ProfileDataProvider>
-          <App />
-        </ProfileDataProvider>
-      </CurrentUserProvider>
-    </Router>
-  </React.StrictMode>,
+  <Router>
+    <CurrentUserProvider>
+      <ProfileDataProvider>
+        <App />
+      </ProfileDataProvider>
+    </CurrentUserProvider>
+  </Router>,
   document.getElementById("root")
 );
 
